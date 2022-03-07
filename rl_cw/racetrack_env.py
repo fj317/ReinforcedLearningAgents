@@ -119,13 +119,13 @@ class RacetrackEnv(object) :
 
 		# Keep velocity within bounds (-10, 10).
         if (self.velocity[0] > 10) :
-            self.velocity[0] = 10
+            self.velocity = (10, self.velocity[1])
         elif (self.velocity[0] < -10) :
-            self.velocity[0] = -10
+            self.velocity = (-10, self.velocity[1])
         if (self.velocity[1] > 10) :
-            self.velocity[1] = 10
+            self.velocity = (self.velocity[0], 10)
         elif (self.velocity[1] < -10) :
-            self.velocity[1] = -10
+            self.velocity = (self.velocity[0], -10)
 
         # Update Position.
         new_position = (self.position[0] + self.velocity[0], self.position[1] + self.velocity[1])
@@ -353,7 +353,7 @@ def plot_combined_results(mc_rewards = None, sarsa_rewards = None, q_learning_re
 	plt.plot(range(num_episodes), mc_average_episode_rewards, label = "MC Control")
 	plt.plot(range(num_episodes), sarsa_average_episode_rewards, label = "Sarsa")
 	plt.plot(range(num_episodes), q_learning_average_episode_rewards, label = "Q-Learning")
-	plt.title("Racetrack Average Learning Curve".format(num_agents))
+	plt.title("Racetrack Average Learning Curve")
 	plt.xlabel("Episodes Played")
 	plt.ylabel("Average Return")
 	plt.legend()
@@ -365,7 +365,7 @@ def plot_combined_results(mc_rewards = None, sarsa_rewards = None, q_learning_re
 	plt.plot(range(num_episodes), mc_average_episode_rewards, label = "MC Control")
 	plt.plot(range(num_episodes), sarsa_average_episode_rewards, label = "Sarsa")
 	plt.plot(range(num_episodes), q_learning_average_episode_rewards, label = "Q-Learning")
-	plt.title("Racetrack Average Learning Curve (Cropped)".format(num_agents))
+	plt.title("Racetrack Average Learning Curve (Cropped)")
 	plt.xlabel("Episodes Played")
 	plt.ylabel("Average Return")
 	plt.ylim((-500, 0))
@@ -378,34 +378,34 @@ def plot_modified_agent_results(q_learning_rewards = None, modified_agent_reward
 			
 	# Q-Learning
 	if (q_learning_rewards is not None):
-		num_agents = len(q_learning_rewards)
+		num_agents_q = len(q_learning_rewards)
 		
 		# Average Returns Lists
 		q_learning_average_episode_rewards = []
 		for episode in range(0, num_episodes) :
 			reward = 0
-			for agent in range(0, num_agents) :
+			for agent in range(0, num_agents_q) :
 				reward += q_learning_rewards[agent][episode]
-			q_learning_average_episode_rewards.append(reward / num_agents)
+			q_learning_average_episode_rewards.append(reward / num_agents_q)
 			
 	# Modified Agent
 	if (modified_agent_rewards is not None):
-		num_agents = len(q_learning_rewards)
+		num_agents_mod = len(modified_agent_rewards)
 		
 		# Average Returns Lists
 		modified_agent_average_episode_rewards = []
 		for episode in range(0, num_episodes) :
 			reward = 0
-			for agent in range(0, num_agents) :
+			for agent in range(0, num_agents_mod) :
 				reward += modified_agent_rewards[agent][episode]
-			modified_agent_average_episode_rewards.append(reward / num_agents)
+			modified_agent_average_episode_rewards.append(reward / num_agents_mod)
 			
 	
 	# Uncropped Learning Curves
 	plt.figure(figsize=(10.666, 6))
 	plt.plot(range(num_episodes), q_learning_average_episode_rewards, label = "Q-Learning")
 	plt.plot(range(num_episodes), modified_agent_average_episode_rewards, label = "Modified Agent")
-	plt.title("Racetrack Average Learning Curve".format(num_agents))
+	plt.title("Racetrack Average Learning Curve")
 	plt.xlabel("Episodes Played")
 	plt.ylabel("Average Return")
 	plt.legend()
@@ -416,7 +416,7 @@ def plot_modified_agent_results(q_learning_rewards = None, modified_agent_reward
 	plt.figure(figsize=(10.666, 6))
 	plt.plot(range(num_episodes), q_learning_average_episode_rewards, label = "Q-Learning")
 	plt.plot(range(num_episodes), modified_agent_average_episode_rewards, label = "Modified Agent")
-	plt.title("Racetrack Average Learning Curve (Cropped)".format(num_agents))
+	plt.title("Racetrack Average Learning Curve (Cropped)")
 	plt.xlabel("Episodes Played")
 	plt.ylabel("Average Return")
 	plt.ylim((-500, 0))
